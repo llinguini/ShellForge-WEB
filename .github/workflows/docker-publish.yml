@@ -14,7 +14,6 @@ concurrency:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
 
 permissions:
   contents: read
@@ -26,6 +25,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Image reference (lowercase)
+        id: image
+        run: echo "ref=${GITHUB_REPOSITORY,,}" >> "${GITHUB_OUTPUT}"
 
       - name: Log in to GHCR
         uses: docker/login-action@v3
@@ -81,8 +84,8 @@ jobs:
           push: true
           platforms: linux/amd64
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            ${{ env.REGISTRY }}/${{ steps.image.outputs.ref }}:${{ steps.version.outputs.version }}
+            ${{ env.REGISTRY }}/${{ steps.image.outputs.ref }}:latest
           build-args: |
             NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL || 'https://api.shellforge.dev' }}
           cache-from: type=gha
@@ -95,6 +98,6 @@ jobs:
             echo ""
             echo "| Tag | Image |"
             echo "|-----|-------|"
-            echo "| \`${{ steps.version.outputs.version }}\` | \`${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}\` |"
-            echo "| \`latest\` | \`${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest\` |"
+            echo "| \`${{ steps.version.outputs.version }}\` | \`${{ env.REGISTRY }}/${{ steps.image.outputs.ref }}:${{ steps.version.outputs.version }}\` |"
+            echo "| \`latest\` | \`${{ env.REGISTRY }}/${{ steps.image.outputs.ref }}:latest\` |"
           } >> "${GITHUB_STEP_SUMMARY}"
