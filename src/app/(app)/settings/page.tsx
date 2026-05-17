@@ -131,6 +131,7 @@ function ProfileSection({
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-md bg-sf-s2 border border-sf-b1 overflow-hidden shrink-0 flex items-center justify-center text-sf-hint text-xs">
             {avatarUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element -- user-provided external URL
               <img
                 src={avatarUrl}
                 alt="avatar"

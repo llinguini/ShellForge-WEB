@@ -53,21 +53,24 @@ export default function ThemesPage() {
 
   useEffect(() => {
     if (!token) return
-    loadThemes()
-  }, [token])
-
-  async function loadThemes() {
-    if (!token) return
+    let cancelled = false
     setLoading(true)
-    try {
-      const data = await getThemes(token)
-      setThemes(Array.isArray(data) ? data : [])
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Failed to load themes')
-    } finally {
-      setLoading(false)
+    getThemes(token)
+      .then((data) => {
+        if (!cancelled) setThemes(Array.isArray(data) ? data : [])
+      })
+      .catch((e) => {
+        if (!cancelled) {
+          setError(e instanceof Error ? e.message : 'Failed to load themes')
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+    return () => {
+      cancelled = true
     }
-  }
+  }, [token])
 
   function openCreate() {
     setEditor({

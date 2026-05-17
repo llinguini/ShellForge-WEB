@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.18] - 2026-05-17
+
+### Fixed
+- `unwrapList` typing in `profile.ts` (Docker/CI `next build` type-check failure)
+- ESLint warnings on settings avatar and themes `useEffect` deps
+
 ## [0.1.17] - 2026-05-17
 
 ### Added

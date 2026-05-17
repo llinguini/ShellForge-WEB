@@ -83,7 +83,7 @@ Init added `button.tsx` (base-nova style). App chrome uses custom `.btn-*` class
 
 ## CI / GHCR (`.github/workflows/docker-publish.yml`)
 - Trigger: push to `main` (and `workflow_dispatch`)
-- Registry: `ghcr.io/<owner>/<repo>` (image name = repository name, lowercase by GHCR)
+- Registry: `ghcr.io/<owner>/<repo>` — workflow forces `${GITHUB_REPOSITORY,,}` (e.g. `llinguini/shellforge-web`)
 - Tags per run: `0.1.N` (patch auto-increment from existing GHCR `0.1.*` tags; first publish → `0.1.0`) + `latest`
 - Repo variable (optional): `NEXT_PUBLIC_API_URL` — defaults to `https://api.shellforge.dev`
 - Uses `GITHUB_TOKEN` with `packages: write`; link package visibility to the repo in GitHub Packages settings

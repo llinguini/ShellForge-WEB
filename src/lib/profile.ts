@@ -9,14 +9,6 @@ export interface FullProfile {
   sync: SyncSettings
 }
 
-const DEFAULT_SYNC: SyncSettings = {
-  sync_theme: false,
-  sync_aliases: false,
-  sync_commands: false,
-  sync_tabs: false,
-  sync_history: false,
-}
-
 /** Raw shape from GET /v1/profile */
 interface ApiProfileRaw {
   theme?: Theme | null
@@ -94,13 +86,13 @@ export interface AliasesResponse {
   aliases: Alias[]
 }
 
-function unwrapList<T>(
-  data: T[] | Record<string, T[] | undefined>,
-  key: string,
-): T[] {
-  if (Array.isArray(data)) return data
-  const list = data[key]
-  return Array.isArray(list) ? list : []
+function unwrapList<T>(data: unknown, key: string): T[] {
+  if (Array.isArray(data)) return data as T[]
+  if (data !== null && typeof data === 'object' && key in data) {
+    const list = (data as Record<string, unknown>)[key]
+    return Array.isArray(list) ? (list as T[]) : []
+  }
+  return []
 }
 
 export async function getAliases(token: string): Promise<Alias[]> {
